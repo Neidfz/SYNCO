@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SYNCO — Editorial Clara</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --red:#CC3D32;--wine:#A80226;--orange:#EF9A29;
+  --teal:#1F8299;--dark:#0A0F2B;--cream:#F7F0E6;
+  --warm:#EDE5D8;--white:#fff;--body:#3D3D3D;--muted:#999;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Epilogue',sans-serif;background:var(--cream);color:var(--dark)}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:20px 60px;display:flex;align-items:center;justify-content:space-between;background:var(--cream);border-bottom:1px solid rgba(10,15,43,.08)}
+.nav-logo{font-family:'Playfair Display',serif;font-weight:900;font-size:20px;color:var(--dark)}
+.nav-logo span{color:var(--red)}
+.nav-links{display:flex;gap:32px;list-style:none}
+.nav-links a{font-size:12px;color:rgba(10,15,43,.45);text-decoration:none;letter-spacing:.06em;transition:color .2s;cursor:pointer}
+.nav-links a:hover{color:var(--dark)}
+.nav-cta{background:var(--dark)!important;color:var(--white)!important;padding:9px 22px!important;font-weight:600!important}
+
+/* Hamburger */
+.nav-burger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;z-index:201}
+.nav-burger span{display:block;width:24px;height:2px;background:var(--dark);transition:all .3s}
+.nav-burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.nav-burger.open span:nth-child(2){opacity:0}
+.nav-burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+
+/* Mobile menu overlay */
+.nav-mobile{display:none;position:fixed;inset:0;background:var(--cream);z-index:200;flex-direction:column;align-items:center;justify-content:center;gap:32px}
+.nav-mobile.open{display:flex}
+.nav-mobile a{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--dark);text-decoration:none;cursor:pointer;transition:color .2s}
+.nav-mobile a:hover{color:var(--red)}
+.nav-mobile .mob-cta{background:var(--dark);color:var(--white)!important;padding:14px 36px;font-family:'Epilogue',sans-serif;font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+
+/* ── PAGES ── */
+.page{display:none;min-height:100vh}
+.page.active{display:block}
+
+.stag{display:inline-flex;align-items:center;gap:8px;font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--red);margin-bottom:18px}
+.stag::before{content:'';display:block;width:24px;height:1.5px;background:var(--red)}
+
+/* ── HOME ── */
+.hero{min-height:100vh;display:grid;grid-template-rows:1fr auto;padding-top:70px}
+.hero-main{display:grid;grid-template-columns:1fr 1fr;min-height:calc(100vh - 70px)}
+.hero-left{padding:80px 60px;display:flex;flex-direction:column;justify-content:center;background:var(--cream)}
+.hero-label{font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--muted);margin-bottom:32px}
+.hero-title{font-family:'Playfair Display',serif;font-size:clamp(44px,5.5vw,80px);font-weight:900;line-height:.95;letter-spacing:-.01em;margin-bottom:32px;color:var(--dark)}
+.hero-title em{font-style:italic;color:var(--red)}
+.hero-body{font-size:15px;color:rgba(10,15,43,.55);line-height:1.8;max-width:380px;margin-bottom:44px}
+.btn-dark{background:var(--dark);color:var(--white);padding:14px 30px;font-family:'Epilogue',sans-serif;font-weight:600;font-size:12px;letter-spacing:.08em;text-transform:uppercase;border:none;cursor:pointer;transition:background .25s;display:inline-block}
+.btn-dark:hover{background:var(--red)}
+.btn-outline{background:transparent;color:var(--dark);padding:14px 30px;font-family:'Epilogue',sans-serif;font-weight:600;font-size:12px;letter-spacing:.08em;text-transform:uppercase;border:1.5px solid var(--dark);cursor:pointer;transition:all .25s;display:inline-block;margin-left:12px}
+.btn-outline:hover{background:var(--dark);color:var(--white)}
+.hero-right{background:var(--warm);position:relative;overflow:hidden;display:flex;align-items:flex-end;padding:40px}
+.hero-right::before{content:'SYNCO';position:absolute;font-family:'Playfair Display',serif;font-size:220px;font-weight:900;color:rgba(10,15,43,.04);top:50%;left:50%;transform:translate(-50%,-50%);white-space:nowrap;pointer-events:none}
+.hero-ph{font-size:11px;color:rgba(10,15,43,.3);letter-spacing:.1em;text-transform:uppercase;position:relative;z-index:1}
+.hero-bar{background:var(--dark);padding:18px 60px;display:flex;gap:48px;align-items:center;flex-wrap:wrap}
+.hb-item{display:flex;flex-direction:column;gap:4px}
+.hb-num{font-family:'Playfair Display',serif;font-size:28px;font-weight:900;color:var(--white);line-height:1}
+.hb-label{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.4)}
+.hb-sep{width:1px;height:40px;background:rgba(255,255,255,.12)}
+
+/* ── CLIENTS ── */
+.clients{padding:48px 60px;border-bottom:1px solid rgba(10,15,43,.08);background:var(--white)}
+.cl-label{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
+.cl-row{display:flex;gap:16px;flex-wrap:wrap}
+.cl-ph{height:40px;flex:1;min-width:120px;background:var(--warm);display:flex;align-items:center;justify-content:center}
+.cl-ph span{font-size:9px;color:rgba(10,15,43,.25);letter-spacing:.1em;text-transform:uppercase}
+
+/* ── QUÉ HACEMOS ── */
+.what{padding:100px 60px;display:grid;grid-template-columns:1fr 1fr;gap:80px;background:var(--white)}
+.what-q{font-family:'Playfair Display',serif;font-size:clamp(26px,3vw,42px);font-weight:700;line-height:1.15;margin-bottom:24px}
+.what-q em{font-style:italic;color:var(--red)}
+.what-body{font-size:14px;color:rgba(10,15,43,.55);line-height:1.85}
+.pillar-list{display:flex;flex-direction:column;gap:28px}
+.pillar{padding:28px 24px;background:var(--cream);border-left:3px solid var(--red)}
+.pillar-num{font-size:10px;font-weight:600;letter-spacing:.2em;color:var(--red);margin-bottom:10px;text-transform:uppercase}
+.pillar h4{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;margin-bottom:8px}
+.pillar p{font-size:12px;color:rgba(10,15,43,.55);line-height:1.7}
+.pillar:nth-child(2){border-color:var(--teal)}
+.pillar:nth-child(2) .pillar-num{color:var(--teal)}
+.pillar:nth-child(3){border-color:var(--orange)}
+.pillar:nth-child(3) .pillar-num{color:var(--orange)}
+
+/* ── SERVICES ── */
+.services{padding:100px 60px;background:var(--dark);color:var(--white)}
+.services-top{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:60px}
+.services-top h2{font-family:'Playfair Display',serif;font-size:clamp(28px,3vw,48px);font-weight:900;max-width:360px;line-height:1.05}
+.services-top h2 em{font-style:italic;color:var(--orange)}
+.serv-list{display:flex;flex-direction:column}
+.serv-row{display:grid;grid-template-columns:60px 1fr 1fr;gap:32px;padding:32px 0;border-bottom:1px solid rgba(255,255,255,.08);align-items:start}
+.serv-row:first-child{border-top:1px solid rgba(255,255,255,.08)}
+.sr-num{font-family:'Playfair Display',serif;font-size:32px;font-weight:700;color:rgba(255,255,255,.12);line-height:1}
+.sr-title{font-family:'Epilogue',sans-serif;font-size:15px;font-weight:600;color:var(--white)}
+.sr-desc{font-size:12px;color:rgba(255,255,255,.45);line-height:1.75}
+
+/* ── CTA ── */
+.cta-section{padding:100px 60px;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;background:var(--cream)}
+.cta-section h2{font-family:'Playfair Display',serif;font-size:clamp(30px,3.5vw,52px);font-weight:900;line-height:1.05}
+.cta-section h2 em{font-style:italic;color:var(--red)}
+.cta-right{display:flex;flex-direction:column;gap:20px}
+.cta-right p{font-size:14px;color:rgba(10,15,43,.55);line-height:1.75}
+
+/* ── FOOTER ── */
+footer{padding:40px 60px;background:var(--dark);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+.foot-logo{font-family:'Playfair Display',serif;font-weight:900;font-size:18px;color:var(--white)}
+.foot-logo span{color:var(--red)}
+.foot-copy{font-size:11px;color:rgba(255,255,255,.25)}
+.foot-accent{width:8px;height:8px;background:var(--orange);border-radius:50%}
+
+/* ── PAGE DOTS ── */
+.page-nav{position:fixed;right:28px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:10px;z-index:200}
+.pn-dot{width:7px;height:7px;border-radius:50%;background:rgba(10,15,43,.15);cursor:pointer;transition:all .2s}
+.pn-dot.active{background:var(--red);transform:scale(1.5)}
+
+/* ── NOSOTROS ── */
+.about-hero{padding:140px 60px 60px;background:var(--cream)}
+.about-hero h1{font-family:'Playfair Display',serif;font-size:clamp(36px,5vw,72px);font-weight:900;letter-spacing:-.01em;line-height:.95;margin-bottom:24px}
+.about-hero h1 em{font-style:italic;color:var(--red)}
+.about-hero p{font-size:15px;color:rgba(10,15,43,.55);max-width:520px;line-height:1.8}
+.about-split{display:grid;grid-template-columns:1fr 1fr;gap:0;background:rgba(10,15,43,.06)}
+.about-text-col{padding:60px;background:var(--white)}
+.about-text-col p{font-size:14px;color:rgba(10,15,43,.6);line-height:1.85;margin-bottom:18px}
+.about-img-col{background:var(--warm);display:flex;align-items:flex-end;padding:32px;position:relative;overflow:hidden;min-height:280px}
+.about-img-col::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(135deg,transparent,transparent 30px,rgba(204,61,50,.04) 30px,rgba(204,61,50,.04) 31px)}
+.aic-label{font-size:10px;color:rgba(10,15,43,.3);letter-spacing:.1em;text-transform:uppercase;position:relative;z-index:1}
+.mv-split{display:grid;grid-template-columns:1fr 1fr;gap:0;background:rgba(10,15,43,.06)}
+.mv-col{padding:60px;background:var(--cream)}
+.mv-col:nth-child(2){background:var(--dark);color:var(--white)}
+.mv-tag{font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--red);margin-bottom:16px}
+.mv-col:nth-child(2) .mv-tag{color:var(--teal)}
+.mv-col h3{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;margin-bottom:14px;line-height:1.2}
+.mv-col p{font-size:13px;line-height:1.8}
+.mv-col:first-child p{color:rgba(10,15,43,.6)}
+.mv-col:nth-child(2) p{color:rgba(255,255,255,.5)}
+.values-sec{padding:80px 60px;background:var(--white)}
+.values-sec h2{font-family:'Playfair Display',serif;font-size:clamp(24px,3vw,40px);font-weight:900;margin-bottom:48px;letter-spacing:-.01em}
+.values-row{display:flex;gap:0;border-top:1px solid rgba(10,15,43,.08);flex-wrap:wrap}
+.val-item{flex:1;min-width:160px;padding:28px 20px;border-right:1px solid rgba(10,15,43,.08);border-bottom:1px solid rgba(10,15,43,.08)}
+.val-item:last-child{border-right:none}
+.vi-icon{font-size:24px;margin-bottom:12px}
+.vi-name{font-family:'Epilogue',sans-serif;font-size:13px;font-weight:600;margin-bottom:8px;color:var(--dark)}
+.vi-desc{font-size:11px;color:var(--muted);line-height:1.6}
+.team-sec{padding:80px 60px;background:var(--cream)}
+.team-sec h2{font-family:'Playfair Display',serif;font-size:clamp(24px,3vw,40px);font-weight:900;margin-bottom:48px}
+.team-row{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+.tc .tc-img{aspect-ratio:3/4;background:var(--warm);margin-bottom:18px;display:flex;align-items:flex-end;padding:16px;position:relative}
+.tc .tc-img::after{content:'';position:absolute;bottom:0;left:0;right:0;height:4px;background:var(--red)}
+.tc .tc-img-lbl{font-size:9px;color:rgba(10,15,43,.3);letter-spacing:.1em;text-transform:uppercase}
+.tc h4{font-family:'Epilogue',sans-serif;font-size:14px;font-weight:600;margin-bottom:3px}
+.tc .tc-role{font-size:11px;color:var(--teal);margin-bottom:8px}
+.tc p{font-size:11px;color:var(--muted);line-height:1.6}
+
+/* ── SERVICIOS ── */
+.sh{padding:140px 60px 60px;background:var(--cream)}
+.sh h1{font-family:'Playfair Display',serif;font-size:clamp(36px,5vw,72px);font-weight:900;line-height:.95;margin-bottom:20px}
+.sh h1 em{font-style:italic;color:var(--red)}
+.sh p{font-size:14px;color:rgba(10,15,43,.55);max-width:480px;line-height:1.8}
+.serv-full{padding:0 60px 80px;background:var(--white)}
+.serv-full-list{display:flex;flex-direction:column}
+.sfl-item{display:grid;grid-template-columns:80px 240px 1fr;gap:32px;padding:36px 0;border-bottom:1px solid rgba(10,15,43,.07);align-items:start}
+.sfl-item:first-child{border-top:1px solid rgba(10,15,43,.07)}
+.sfl-n{font-family:'Playfair Display',serif;font-size:48px;font-weight:900;color:rgba(10,15,43,.06);line-height:1}
+.sfl-name{font-family:'Epilogue',sans-serif;font-size:16px;font-weight:600;color:var(--dark);padding-top:8px}
+.sfl-desc{font-size:13px;color:rgba(10,15,43,.55);line-height:1.75;padding-top:8px}
+.meth-sec{padding:80px 60px;background:var(--dark);color:var(--white)}
+.meth-sec h2{font-family:'Playfair Display',serif;font-size:clamp(24px,3vw,40px);font-weight:900;margin-bottom:48px}
+.meth-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,.08)}
+.mg-item{background:var(--dark);padding:36px 28px}
+.mg-n{font-family:'Playfair Display',serif;font-size:40px;font-weight:900;color:rgba(255,255,255,.06);margin-bottom:-6px;display:block}
+.mg-item h4{font-family:'Epilogue',sans-serif;font-size:15px;font-weight:600;margin-bottom:8px;color:var(--white)}
+.mg-item p{font-size:12px;color:rgba(255,255,255,.4);line-height:1.7}
+
+/* ── PROYECTOS ── */
+.ph{padding:140px 60px 60px;background:var(--cream)}
+.ph h1{font-family:'Playfair Display',serif;font-size:clamp(36px,5vw,72px);font-weight:900;line-height:.95;margin-bottom:20px}
+.ph h1 em{font-style:italic;color:var(--orange)}
+.ph p{font-size:14px;color:rgba(10,15,43,.55);max-width:480px;line-height:1.8}
+.proj-list{display:flex;flex-direction:column;gap:0;background:rgba(10,15,43,.06)}
+.pl-item{display:grid;grid-template-columns:1fr 1fr;background:var(--white)}
+.pl-item:nth-child(even){direction:rtl}
+.pl-item:nth-child(even)>*{direction:ltr}
+.pl-img{aspect-ratio:16/10;background:var(--warm);display:flex;align-items:flex-end;padding:24px;position:relative;overflow:hidden}
+.pl-img-lbl{font-size:9px;color:rgba(10,15,43,.3);letter-spacing:.1em;text-transform:uppercase}
+.pl-info{padding:52px 48px;display:flex;flex-direction:column;justify-content:center}
+.pl-client{font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--orange);margin-bottom:12px}
+.pl-info h3{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;margin-bottom:14px;line-height:1.2}
+.pl-info p{font-size:13px;color:rgba(10,15,43,.55);line-height:1.75}
+.rm{padding:80px 60px;background:var(--dark);color:var(--white)}
+.rm h2{font-family:'Playfair Display',serif;font-size:clamp(24px,3vw,40px);font-weight:900;margin-bottom:12px}
+.rm .sub{font-size:13px;color:rgba(255,255,255,.4);margin-bottom:48px;font-style:italic}
+.rm-phases{display:grid;grid-template-columns:1fr 1fr;gap:32px}
+.rmp{padding:40px;background:rgba(255,255,255,.04);border-top:3px solid}
+.rmp.p1{border-color:var(--red)}
+.rmp.p2{border-color:var(--teal)}
+.rmp-label{font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;margin-bottom:16px}
+.rmp.p1 .rmp-label{color:var(--red)}
+.rmp.p2 .rmp-label{color:var(--teal)}
+.rmp h3{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;margin-bottom:12px}
+.rmp p{font-size:13px;color:rgba(255,255,255,.45);line-height:1.7}
+
+/* ── TALLERES ── */
+.th{padding:140px 60px 60px;background:var(--cream)}
+.th h1{font-family:'Playfair Display',serif;font-size:clamp(36px,5vw,72px);font-weight:900;line-height:.95;margin-bottom:20px}
+.th h1 em{font-style:italic;color:var(--teal)}
+.th p{font-size:14px;color:rgba(10,15,43,.55);max-width:480px;line-height:1.8}
+.tall-list{padding:0 60px 60px;background:var(--white);display:flex;flex-direction:column}
+.tl-item{display:grid;grid-template-columns:60px 1fr;gap:28px;padding:36px 0;border-bottom:1px solid rgba(10,15,43,.07);align-items:start}
+.tl-item:first-child{border-top:1px solid rgba(10,15,43,.07)}
+.tl-n{font-family:'Playfair Display',serif;font-size:48px;font-weight:900;color:rgba(10,15,43,.06);line-height:1}
+.tl-item h3{font-family:'Epilogue',sans-serif;font-size:16px;font-weight:600;margin-bottom:8px}
+.tl-item p{font-size:13px;color:rgba(10,15,43,.55);line-height:1.7}
+.tall-banner{margin:0 60px 60px;aspect-ratio:21/8;background:var(--warm);display:flex;align-items:flex-end;padding:32px;position:relative;overflow:hidden}
+.tall-banner-lbl{font-size:10px;color:rgba(10,15,43,.3);letter-spacing:.1em;text-transform:uppercase}
+.diag{padding:60px;background:var(--cream);display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
+.diag h2{font-family:'Playfair Display',serif;font-size:clamp(22px,2.5vw,36px);font-weight:900;margin-bottom:12px}
+.diag .qi{font-style:italic;font-size:13px;color:var(--muted);margin-bottom:28px}
+.diag-step-list{display:flex;flex-direction:column}
+.ds{display:flex;gap:16px;padding:14px 0;border-bottom:1px solid rgba(10,15,43,.08);align-items:center}
+.ds-n{width:28px;height:28px;background:var(--red);color:#fff;font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ds p{font-size:13px;color:var(--dark);font-weight:500}
+.diag-img-col{aspect-ratio:4/3;background:var(--warm);display:flex;align-items:flex-end;padding:20px}
+.diag-img-lbl{font-size:9px;color:rgba(10,15,43,.3);letter-spacing:.1em;text-transform:uppercase}
+
+/* ── CONTACTO ── */
+.ch{padding:140px 60px 60px;background:var(--cream)}
+.ch h1{font-family:'Playfair Display',serif;font-size:clamp(32px,4.5vw,64px);font-weight:900;line-height:.95;margin-bottom:20px}
+.ch h1 em{font-style:italic;color:var(--red)}
+.ch p{font-size:14px;color:rgba(10,15,43,.55);max-width:480px;line-height:1.8}
+.cf{padding:60px;background:var(--white);display:grid;grid-template-columns:1.1fr .9fr;gap:80px}
+.fg{margin-bottom:20px}
+.fg label{display:block;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.fi{background:transparent;border:0;border-bottom:1.5px solid rgba(10,15,43,.12);height:44px;width:100%;transition:border-color .2s;outline:none;font-family:'Epilogue',sans-serif;font-size:14px;color:var(--dark)}
+.fi:hover,.fi:focus{border-color:rgba(10,15,43,.35)}
+.fi.ta{height:100px;resize:none;padding-top:10px}
+.fsub{background:var(--dark);color:var(--white);padding:15px;font-family:'Epilogue',sans-serif;font-weight:600;font-size:12px;letter-spacing:.1em;text-transform:uppercase;border:none;cursor:pointer;width:100%;margin-top:8px;transition:background .25s}
+.fsub:hover{background:var(--red)}
+.ci h3{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;margin-bottom:24px}
+.ci-img{aspect-ratio:4/3;background:var(--warm);margin-bottom:28px;display:flex;align-items:flex-end;padding:16px}
+.ci-img-lbl{font-size:9px;color:rgba(10,15,43,.3);letter-spacing:.1em;text-transform:uppercase}
+.ci-line{padding:12px 0;border-bottom:1px solid rgba(10,15,43,.08);display:flex;gap:16px}
+.ci-line .lbl{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);min-width:80px}
+.ci-line .val{font-size:13px;color:var(--dark)}
+.id-sec{padding:60px;background:var(--dark);color:var(--white);display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.id-sec h2{font-family:'Playfair Display',serif;font-size:clamp(24px,3vw,40px);font-weight:900;line-height:1.1;margin-bottom:16px}
+.id-sec h2 em{font-style:italic;color:var(--orange)}
+.id-sec p{font-size:13px;color:rgba(255,255,255,.5);line-height:1.8;margin-bottom:28px}
+.vpills{display:flex;flex-wrap:wrap;gap:8px}
+.vp{padding:7px 16px;border:1px solid rgba(255,255,255,.15);font-size:11px;color:rgba(255,255,255,.55);letter-spacing:.04em;transition:all .2s;cursor:default}
+.vp:hover{border-color:var(--orange);color:var(--white)}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.page.active .hero-title{animation:fadeUp .7s ease both}
+.page.active .hero-body{animation:fadeUp .7s .15s ease both}
+
+/* ══════════════════════════════════
+   RESPONSIVE — TABLET (≤ 900px)
+══════════════════════════════════ */
+@media(max-width:900px){
+  .team-row{grid-template-columns:1fr 1fr}
+  .sfl-item{grid-template-columns:60px 1fr;gap:16px}.sfl-desc{display:none}
+  .meth-grid{grid-template-columns:1fr}
+}
+
+/* ══════════════════════════════════
+   RESPONSIVE — MOBILE (≤ 768px)
+══════════════════════════════════ */
+@media(max-width:768px){
+
+  /* Nav */
+  nav{padding:16px 20px;top:0}
+  .nav-links{display:none}
+  .nav-burger{display:flex}
+  .page-nav{display:none}
+
+  /* Banner top */
+  body > div[style*="position:fixed"]{font-size:9px;padding:5px 10px;line-height:1.4}
+
+  /* Hero */
+  .hero{padding-top:56px}
+  .hero-main{grid-template-columns:1fr}
+  .hero-left{padding:48px 24px 40px}
+  .hero-right{min-height:220px;aspect-ratio:auto}
+  .hero-right::before{font-size:100px}
+  .hero-bar{padding:20px 24px;gap:24px}
+  .hb-sep{display:none}
+  .hb-item{min-width:calc(50% - 12px)}
+
+  /* Secciones generales con padding lateral */
+  .clients{padding:36px 24px}
+  .what{padding:60px 24px;grid-template-columns:1fr;gap:40px}
+  .services{padding:60px 24px}
+  .cta-section{padding:60px 24px;grid-template-columns:1fr;gap:32px}
+  .about-hero{padding:100px 24px 40px}
+  .about-split{grid-template-columns:1fr}
+  .about-text-col{padding:40px 24px}
+  .mv-split{grid-template-columns:1fr}
+  .mv-col{padding:40px 24px}
+  .values-sec{padding:60px 24px}
+  .team-sec{padding:60px 24px}
+  .team-row{grid-template-columns:1fr 1fr;gap:16px}
+  .sh{padding:100px 24px 40px}
+  .serv-full{padding:0 24px 60px}
+  .sfl-item{grid-template-columns:44px 1fr;gap:12px}
+  .sfl-n{font-size:32px}
+  .sfl-desc{display:none}
+  .meth-sec{padding:60px 24px}
+  .meth-grid{grid-template-columns:1fr}
+  .ph{padding:100px 24px 40px}
+  .proj-list .pl-item{grid-template-columns:1fr;direction:ltr}
+  .proj-list .pl-item:nth-child(even){direction:ltr}
+  .pl-info{padding:32px 24px}
+  .rm{padding:60px 24px}
+  .rm-phases{grid-template-columns:1fr}
+  .th{padding:100px 24px 40px}
+  .tall-list{padding:0 24px 40px}
+  .tall-banner{margin:0 24px 40px;aspect-ratio:16/9}
+  .diag{padding:40px 24px;grid-template-columns:1fr;gap:40px}
+  .diag-img-col{display:none}
+  .ch{padding:100px 24px 40px}
+  .cf{padding:32px 24px;grid-template-columns:1fr;gap:40px}
+  .id-sec{padding:40px 24px;grid-template-columns:1fr;gap:32px}
+  .id-sec > div:last-child{display:none}
+  footer{padding:32px 24px;flex-direction:column;align-items:flex-start;gap:12px}
+
+  /* Botones apilados en móvil */
+  .btn-outline{margin-left:0;margin-top:12px;display:block}
+  .hero-left > div{display:flex;flex-direction:column;align-items:flex-start}
+
+  /* Services row en móvil */
+  .serv-row{grid-template-columns:44px 1fr;gap:16px}
+  .sr-desc{grid-column:2}
+}
+</style>
+</head>
+<body>
+
+<div style="position:fixed;top:0;left:0;right:0;background:var(--red);color:#fff;text-align:center;font-family:'Epilogue',sans-serif;font-size:10px;font-weight:600;letter-spacing:.15em;padding:6px;z-index:999;text-transform:uppercase">
+  SYNCO · OPCIÓN B · Editorial Clara — Wireframe de referencia
+</div>
+
+<!-- Mobile nav overlay -->
+<nav style="top:28px" id="mainNav">
+  <div class="nav-logo">SYN<span>C</span>O</div>
+  <ul class="nav-links">
+    <li><a onclick="goPage(1);closeMobileMenu()">Nosotros</a></li>
+    <li><a onclick="goPage(2);closeMobileMenu()">Servicios</a></li>
+    <li><a onclick="goPage(3);closeMobileMenu()">Proyectos</a></li>
+    <li><a onclick="goPage(4);closeMobileMenu()">Talleres</a></li>
+    <li><a onclick="goPage(5);closeMobileMenu()" class="nav-cta">Contacto</a></li>
+  </ul>
+  <div class="nav-burger" id="burger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<div class="nav-mobile" id="mobileMenu">
+  <a onclick="goPage(0);closeMobileMenu()">Inicio</a>
+  <a onclick="goPage(1);closeMobileMenu()">Nosotros</a>
+  <a onclick="goPage(2);closeMobileMenu()">Servicios</a>
+  <a onclick="goPage(3);closeMobileMenu()">Proyectos</a>
+  <a onclick="goPage(4);closeMobileMenu()">Talleres</a>
+  <a onclick="goPage(5);closeMobileMenu()" class="mob-cta">Contacto</a>
+</div>
+
+<div class="page-nav" id="pageDots"></div>
+
+<!-- HOME -->
+<div class="page active" id="page0">
+  <div class="hero">
+    <div class="hero-main">
+      <div class="hero-left">
+        <p class="hero-label">Cali · Colombia · Innovación</p>
+        <h1 class="hero-title">Cali tiene todo<br>para ser ciudad<br><em>referente.</em></h1>
+        <p class="hero-body">Acompañamos a PYMES a innovar, colaborar y crecer. Competencia No Destructiva.</p>
+        <div><button class="btn-dark" onclick="goPage(5)">Diagnóstico gratis</button><button class="btn-outline" onclick="goPage(3)">Ver proyectos</button></div>
+      </div>
+      <div class="hero-right"><span class="hero-ph">📷 Foto equipo SYNCO</span></div>
+    </div>
+    <div class="hero-bar">
+      <div class="hb-item"><span class="hb-num">3</span><span class="hb-label">Proyectos activos</span></div>
+      <div class="hb-sep"></div>
+      <div class="hb-item"><span class="hb-num">4</span><span class="hb-label">Especialistas</span></div>
+      <div class="hb-sep"></div>
+      <div class="hb-item"><span class="hb-num">2026</span><span class="hb-label">Fase 1 en curso</span></div>
+      <div class="hb-sep"></div>
+      <div class="hb-item"><span class="hb-num">CND</span><span class="hb-label">Competencia No Destructiva</span></div>
+    </div>
+  </div>
+  <div class="clients">
+    <p class="cl-label">Empresas que ya son agentes de innovación con SYNCO</p>
+    <div class="cl-row">
+      <div class="cl-ph"><span>Cliente 01</span></div><div class="cl-ph"><span>Cliente 02</span></div><div class="cl-ph"><span>Cliente 03</span></div><div class="cl-ph"><span>Cliente 04</span></div><div class="cl-ph"><span>Cliente 05</span></div>
+    </div>
+  </div>
+  <div class="what">
+    <div>
+      <div class="stag">Qué hacemos</div>
+      <h2 class="what-q">"No basta con hacerlas bien. Hay que hacerlas <em>diferente."</em></h2>
+      <p class="what-body">Transformamos empresas en agentes de innovación activos, hacia adentro y hacia afuera del ecosistema.</p>
+    </div>
+    <div class="pillar-list">
+      <div class="pillar"><div class="pillar-num">01</div><h4>Hacia adentro</h4><p>Descubrimos el potencial de transformación de cada empresa desde su realidad interna.</p></div>
+      <div class="pillar"><div class="pillar-num">02</div><h4>Hacia afuera</h4><p>Conectamos la empresa con el ecosistema de innovación de la ciudad.</p></div>
+      <div class="pillar"><div class="pillar-num">03</div><h4>Competencia No Destructiva</h4><p>Empresas que compiten en el mercado y se alían en el conocimiento.</p></div>
+    </div>
+  </div>
+  <div class="services">
+    <div class="services-top"><h2>Todo lo que tu empresa necesita para <em>crecer.</em></h2></div>
+    <div class="serv-list">
+      <div class="serv-row"><span class="sr-num">01</span><span class="sr-title">Acompañamiento Estratégico</span><span class="sr-desc">Co-construimos la hoja de ruta de innovación junto al equipo.</span></div>
+      <div class="serv-row"><span class="sr-num">02</span><span class="sr-title">Creación de Redes</span><span class="sr-desc">Arquitectura de colaboración entre sectores.</span></div>
+      <div class="serv-row"><span class="sr-num">03</span><span class="sr-title">Proyectos Conjuntos</span><span class="sr-desc">Innovación colaborativa entre empresas del ecosistema.</span></div>
+    </div>
+  </div>
+  <div class="cta-section">
+    <h2>¿Listo para ser un agente de <em>innovación?</em></h2>
+    <div class="cta-right"><p>Tu decisión de innovar beneficia a tu equipo, tus clientes, tus proveedores y la ciudad que compartimos.</p><button class="btn-dark" onclick="goPage(5)">Hablemos →</button></div>
+  </div>
+  <footer><div class="foot-logo">SYN<span>C</span>O</div><div class="foot-copy">© 2026 · Cali, Colombia · Todos somos agentes de innovación</div><div class="foot-accent"></div></footer>
+</div>
+
+<!-- NOSOTROS -->
+<div class="page" id="page1">
+  <div class="about-hero"><div class="stag">Nosotros</div><h1>Somos un ecosistema<br>en <em>movimiento.</em></h1><p>SYNCO nació de una convicción simple: las ciudades no crecen por la suma de sus empresas individuales, sino por la calidad de sus conversaciones colectivas.</p></div>
+  <div class="about-split">
+    <div class="about-text-col"><p>No somos una consultora tradicional ni una aceleradora. Somos algo más parecido a un ecosistema donde empresas, emprendedores, instituciones y comunidades creativas se encuentran y co-crean soluciones.</p><p>Nos inspiramos en Innobasque, la Universidad de Aalto y el Design Factory Global Network, pero con raíz caleña.</p></div>
+    <div class="about-img-col"><span class="aic-label">📷 Foto equipo SYNCO</span></div>
+  </div>
+  <div class="mv-split">
+    <div class="mv-col"><div class="mv-tag">Misión</div><h3>Competencia No Destructiva</h3><p>Impulsar el desarrollo socio-económico y cultural de Cali a través de una competencia no destructiva entre sus agentes de innovación.</p></div>
+    <div class="mv-col"><div class="mv-tag">Visión</div><h3>Cali, referente de innovación</h3><p>Posicionar a Cali como ciudad referente en el ecosistema de innovación de Colombia y el mundo.</p></div>
+  </div>
+  <div class="values-sec"><div class="stag">Valores</div><h2>Los principios que nos mueven</h2><div class="values-row"><div class="val-item"><div class="vi-icon">⚖️</div><div class="vi-name">Fairplay</div><div class="vi-desc">Justos en todas las relaciones, sin excepción.</div></div><div class="val-item"><div class="vi-icon">🤝</div><div class="vi-name">Cooperación</div><div class="vi-desc">Cooperar no es ceder, es multiplicar.</div></div><div class="val-item"><div class="vi-icon">🌎</div><div class="vi-name">Localismo Global</div><div class="vi-desc">La singularidad de Cali como ventaja competitiva.</div></div><div class="val-item"><div class="vi-icon">📚</div><div class="vi-name">Formación Permanente</div><div class="vi-desc">El conocimiento fluye en múltiples direcciones.</div></div><div class="val-item"><div class="vi-icon">💬</div><div class="vi-name">Lenguaje Transformador</div><div class="vi-desc">Cómo nombramos define lo que podemos imaginar.</div></div></div></div>
+  <div class="team-sec"><div class="stag">Equipo</div><h2>Un equipo multidisciplinar y apasionado</h2><div class="team-row"><div class="tc"><div class="tc-img"><span class="tc-img-lbl">📷 Santiago Rivera</span></div><h4>Santiago Rivera</h4><div class="tc-role">Innovación y Transformación Digital</div><p>Máster en Innovación. Ciclo de vida de productos y análisis de mercados.</p></div><div class="tc"><div class="tc-img"><span class="tc-img-lbl">📷 Sebastián Cuenca</span></div><h4>Sebastián Cuenca</h4><div class="tc-role">Psicología Organizacional</div><p>Facilitación de talleres y liderazgo de equipos de innovación.</p></div><div class="tc"><div class="tc-img"><span class="tc-img-lbl">📷 Esneider Flórez</span></div><h4>Esneider Flórez</h4><div class="tc-role">Prototipado y Operaciones</div><p>Prototipado, automatización y logística de eventos empresariales.</p></div><div class="tc"><div class="tc-img"><span class="tc-img-lbl">📷 Daniela Villegas</span></div><h4>Daniela Villegas</h4><div class="tc-role">Diseño y Ecosistemas Digitales</div><p>Diseño visual, marca, productos digitales y SEO.</p></div></div></div>
+  <footer><div class="foot-logo">SYN<span>C</span>O</div><div class="foot-copy">© 2026 · Cali, Colombia</div><div class="foot-accent"></div></footer>
+</div>
+
+<!-- SERVICIOS -->
+<div class="page" id="page2">
+  <div class="sh"><div class="stag">Servicios</div><h1>Todo lo que tu marca<br>necesita para <em>crecer.</em></h1><p>Metodologías probadas, adaptadas al contexto de cada empresa.</p></div>
+  <div class="serv-full"><div class="serv-full-list"><div class="sfl-item"><span class="sfl-n">01</span><span class="sfl-name">Acompañamiento Estratégico</span><span class="sfl-desc">Co-construimos la hoja de ruta de innovación. No diseñamos para las empresas, diseñamos con ellas.</span></div><div class="sfl-item"><span class="sfl-n">02</span><span class="sfl-name">Creación de Redes</span><span class="sfl-desc">Identificamos sinergias y construimos la arquitectura de colaboración entre sectores.</span></div><div class="sfl-item"><span class="sfl-n">03</span><span class="sfl-name">Proyectos Conjuntos</span><span class="sfl-desc">Facilitamos proyectos de innovación colaborativa entre múltiples empresas del ecosistema.</span></div><div class="sfl-item"><span class="sfl-n">04</span><span class="sfl-name">Talleres de Innovación</span><span class="sfl-desc">Experiencias de aprendizaje activo: design thinking, vigilancia tecnológica y más.</span></div><div class="sfl-item"><span class="sfl-n">05</span><span class="sfl-name">Laboratorios de Innovación</span><span class="sfl-desc">Espacios para prototipar y validar hipótesis antes de comprometer recursos.</span></div><div class="sfl-item"><span class="sfl-n">06</span><span class="sfl-name">Recursos de Conocimiento</span><span class="sfl-desc">Planes estratégicos, informes de competitividad y recursos educativos del ecosistema.</span></div></div></div>
+  <div class="meth-sec"><div class="stag" style="color:var(--orange);border-color:var(--orange)">Cómo operamos</div><h2>Nuestra metodología</h2><div class="meth-grid"><div class="mg-item"><span class="mg-n">01</span><h4>Contacto y diagnóstico</h4><p>Big picture de la empresa: fortalezas, cuellos de botella y oportunidades de innovación.</p></div><div class="mg-item"><span class="mg-n">02</span><h4>Co-creación estratégica</h4><p>Definimos prioridades e imaginamos soluciones juntos. La estrategia es genuinamente compartida.</p></div><div class="mg-item"><span class="mg-n">03</span><h4>Proyecto rompehielos</h4><p>Acción de alto impacto en corto plazo. Demuestra que el cambio es posible.</p></div><div class="mg-item"><span class="mg-n">04</span><h4>Proyectos grandes</h4><p>Escala con otras empresas del ecosistema. La competencia no destructiva se vuelve tangible.</p></div><div class="mg-item"><span class="mg-n">05</span><h4>Análisis de proyecciones</h4><p>Patrones transversales que revelan oportunidades emergentes y problemáticas sistémicas.</p></div><div class="mg-item"><span class="mg-n">06</span><h4>Planes e informes</h4><p>Hoja de ruta por clúster e informe de competitividad sectorial. No es el final, es el inicio.</p></div></div></div>
+  <footer><div class="foot-logo">SYN<span>C</span>O</div><div class="foot-copy">© 2026 · Cali, Colombia</div><div class="foot-accent"></div></footer>
+</div>
+
+<!-- PROYECTOS -->
+<div class="page" id="page3">
+  <div class="ph"><div class="stag">Proyectos</div><h1>Resultados reales,<br>en <em>Cali.</em></h1><p>Nuestro mejor argumento no es la teoría. Es lo que hemos construido con empresas reales.</p></div>
+  <div class="proj-list">
+    <div class="pl-item"><div class="pl-img"><span class="pl-img-lbl">📷 Bodega Gomar</span></div><div class="pl-info"><div class="pl-client">Bodega Gomar</div><h3>Optimización logística de bodega</h3><p>Transformamos la operación de bodega de un sistema empírico a un modelo estandarizado y replicable.</p></div></div>
+    <div class="pl-item"><div class="pl-img"><span class="pl-img-lbl">📷 CIO</span></div><div class="pl-info"><div class="pl-client">CIO — Sector Editorial</div><h3>Automatización y layout de planta</h3><p>Reorganización del layout con manufactura eficiente y primera fase de automatización.</p></div></div>
+    <div class="pl-item"><div class="pl-img"><span class="pl-img-lbl">📷 El Mayorista</span></div><div class="pl-info"><div class="pl-client">El Mayorista</div><h3>Cultura organizacional y capacitación</h3><p>Cuando la cultura mejora, todo lo demás mejora: motivación, calidad del servicio y resultados.</p></div></div>
+  </div>
+  <div class="rm"><div class="stag" style="color:var(--orange);border-color:var(--orange)">Hoja de ruta</div><h2>Una organización en<br>constante construcción</h2><p class="sub">Una organización que se declara terminada es una que ha dejado de aprender.</p><div class="rm-phases"><div class="rmp p1"><div class="rmp-label">Fase 1 · 2026 — 2027</div><h3>Consolidación en Cali</h3><p>Establecer a SYNCO como organización de valor en redes y proyectos de innovación en Cali.</p></div><div class="rmp p2"><div class="rmp-label">Fase 2 · 2027 en adelante</div><h3>Centro de Innovación SYNCO</h3><p>Principal nodo de articulación del ecosistema. Primer laboratorio permanente de innovación de Cali.</p></div></div></div>
+  <footer><div class="foot-logo">SYN<span>C</span>O</div><div class="foot-copy">© 2026 · Cali, Colombia</div><div class="foot-accent"></div></footer>
+</div>
+
+<!-- TALLERES -->
+<div class="page" id="page4">
+  <div class="th"><div class="stag">Talleres & Diagnóstico</div><h1>Experiencias<br><em>transformadoras.</em></h1><p>Nuestros talleres no son conferencias pasivas. Son campos de entrenamiento para agentes de cambio.</p></div>
+  <div class="tall-list"><div class="tl-item"><span class="tl-n">01</span><div><h3>Design Thinking</h3><p>Resolución de problemas centrada en personas. Empatizamos, redefinimos, ideamos y prototipamos.</p></div></div><div class="tl-item"><span class="tl-n">02</span><div><h3>Vigilancia Tecnológica</h3><p>Construimos modelos de seguimiento del entorno para convertir información en oportunidades estratégicas.</p></div></div><div class="tl-item"><span class="tl-n">03</span><div><h3>Gestión del Cambio</h3><p>Formamos líderes que crean las condiciones para que el cambio ocurra.</p></div></div><div class="tl-item"><span class="tl-n">04</span><div><h3>Cultura de Innovación</h3><p>Las creencias y comportamientos que hacen posible o imposible innovar en una organización.</p></div></div></div>
+  <div class="tall-banner"><span class="tall-banner-lbl">📷 Fotografía o video de sesión de taller SYNCO</span></div>
+  <div class="diag"><div><div class="stag">Diagnóstico</div><h2>Antes de saber a dónde ir, necesitas saber dónde estás.</h2><p class="qi">Uno de los errores más frecuentes: resolver los síntomas sin entender la enfermedad.</p><div class="diag-step-list"><div class="ds"><div class="ds-n">1</div><p>Contacto inicial y contexto</p></div><div class="ds"><div class="ds-n">2</div><p>Diagnóstico Big Picture completo</p></div><div class="ds"><div class="ds-n">3</div><p>Priorización de problemáticas</p></div><div class="ds"><div class="ds-n">4</div><p>Mapa de innovación personalizado</p></div><div class="ds"><div class="ds-n">5</div><p>Primer proyecto piloto</p></div></div><button class="btn-dark" style="margin-top:24px;cursor:pointer" onclick="goPage(5)">Solicita tu diagnóstico gratuito →</button></div><div class="diag-img-col"><span class="diag-img-lbl">📷 Diagrama del diagnóstico</span></div></div>
+  <footer><div class="foot-logo">SYN<span>C</span>O</div><div class="foot-copy">© 2026 · Cali, Colombia</div><div class="foot-accent"></div></footer>
+</div>
+
+<!-- CONTACTO -->
+<div class="page" id="page5">
+  <div class="ch"><div class="stag">Contacto</div><h1>El primer paso es<br>atreverse a hacer la<br>primera <em>pregunta.</em></h1><p>Tu decisión de innovar beneficia a tu equipo, tus clientes, tus proveedores y la ciudad que compartimos.</p></div>
+  <div class="cf">
+    <div>
+      <div class="fg"><label>Nombre completo</label><input class="fi" type="text" placeholder="Tu nombre"/></div>
+      <div class="fg"><label>Empresa</label><input class="fi" type="text" placeholder="Tu empresa"/></div>
+      <div class="fg"><label>Correo electrónico</label><input class="fi" type="email" placeholder="correo@empresa.com"/></div>
+      <div class="fg"><label>¿En qué podemos ayudarte?</label><textarea class="fi ta" placeholder="Cuéntanos..."></textarea></div>
+      <button class="fsub">Enviar mensaje →</button>
+    </div>
+    <div class="ci"><div class="ci-img"><span class="ci-img-lbl">📷 Foto equipo / espacio SYNCO</span></div><h3>Hablemos directamente</h3><div class="ci-line"><span class="lbl">Ubicación</span><span class="val">Cali, Colombia</span></div><div class="ci-line"><span class="lbl">Email</span><span class="val">hola@synco.co</span></div><div class="ci-line"><span class="lbl">WhatsApp</span><span class="val">+57 000 000 0000</span></div><div class="ci-line"><span class="lbl">Redes</span><span class="val">LinkedIn · Instagram</span></div></div>
+  </div>
+  <div class="id-sec"><div><h2>Crecemos como la serie de <em>Fibonacci.</em></h2><p>Nunca partimos de cero ni damos saltos arbitrarios. Es un crecimiento orgánico, sostenido y acumulativo.</p><div class="vpills"><div class="vp">Fairplay</div><div class="vp">Cooperación</div><div class="vp">Localismo Global</div><div class="vp">Formación Permanente</div><div class="vp">Lenguaje Transformador</div></div></div><div style="aspect-ratio:1;background:rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center"><span style="font-size:11px;color:rgba(255,255,255,.2);letter-spacing:.1em;text-transform:uppercase">📷 Logo / gráfica SYNCO</span></div></div>
+  <footer><div class="foot-logo">SYN<span>C</span>O</div><div class="foot-copy">© 2026 · Cali, Colombia · Todos somos agentes de innovación</div><div class="foot-accent"></div></footer>
+</div>
+
+<script>
+const pages=6,dots=document.getElementById('pageDots');
+const names=['Inicio','Nosotros','Servicios','Proyectos','Talleres','Contacto'];
+for(let i=0;i<pages;i++){const d=document.createElement('div');d.className='pn-dot'+(i===0?' active':'');d.title=names[i];d.onclick=()=>goPage(i);dots.appendChild(d)}
+
+function goPage(n){
+  document.querySelectorAll('.page').forEach((p,i)=>p.classList.toggle('active',i===n));
+  document.querySelectorAll('.pn-dot').forEach((d,i)=>d.classList.toggle('active',i===n));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function toggleMenu(){
+  const menu=document.getElementById('mobileMenu');
+  const burger=document.getElementById('burger');
+  const nav=document.getElementById('mainNav');
+  menu.classList.toggle('open');
+  burger.classList.toggle('open');
+}
+
+function closeMobileMenu(){
+  document.getElementById('mobileMenu').classList.remove('open');
+  document.getElementById('burger').classList.remove('open');
+}
+</script>
+</body>
+</html>
